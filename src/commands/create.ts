@@ -2,11 +2,14 @@ import { GluegunCommand } from 'gluegun'
 import { configCustom } from '../utils/configCustom'
 import { IConfigProject, defaultConfig } from '../controls/defaultConfig'
 import { configAdapter } from '../adapters/configAdapter'
+import { handleError } from '../middlewares/handleError'
 
-const command: GluegunCommand = {
-  name: 'create',
-  description: 'Create a new Vite project boilerplate',
-  run: async (toolbox) => {
+class CreateCommand implements GluegunCommand {
+  name = 'create'
+  description = 'Create a new Vite project boilerplate'
+
+  @handleError
+  async run(toolbox) {
     const {
       print: { info, success, error },
       parameters: { first },
@@ -29,25 +32,20 @@ const command: GluegunCommand = {
 
     info(`Creating a new Vite project with name: ${projectName}`)
 
-    try {
-      const projectTypeString = await typeProject()
+    const projectTypeString = await typeProject()
 
-      if (projectTypeString === 'Custom') {
-        config = await configCustom({ projectName, selectOption })
-      }
-
-      await createProject(config)
-      projectTypeString === 'Custom' &&
-        (await configureProject(`./${config.name}/`))
-      await installDependencies({ projectName, config: configAdapter(config) })
-      await openVsCode()
-
-      success('Project created successfully!')
-    } catch (err) {
-      error(err)
-      process.exit(1)
+    if (projectTypeString === 'Custom') {
+      config = await configCustom({ projectName, selectOption })
     }
-  },
+
+    await createProject(config)
+    projectTypeString === 'Custom' &&
+      (await configureProject(`./${config.name}/`))
+    await installDependencies({ projectName, config: configAdapter(config) })
+    await openVsCode()
+
+    success('Project created successfully!')
+  }
 }
 
-module.exports = command
+module.exports = new CreateCommand()

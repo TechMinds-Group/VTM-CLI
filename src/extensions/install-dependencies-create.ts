@@ -1,5 +1,10 @@
 import * as fs from 'fs'
-import { Toolbox } from 'gluegun/build/types/domain/toolbox'
+import { GluegunPrint } from 'gluegun'
+import {
+  GluegunParameters,
+  GluegunToolbox,
+  Toolbox,
+} from 'gluegun/build/types/domain/toolbox'
 import * as shell from 'shelljs'
 import { IConfigAdapter } from '../adapters/configAdapter'
 import { extractInstallDependencies } from '../utils/extractInstallDependencies'
@@ -9,17 +14,17 @@ interface IInstallDependencies {
   config: IConfigAdapter
 }
 
-module.exports = (toolbox: Toolbox) => {
-  const {
-    parameters,
-    print: { info },
-  } = toolbox
+class InstallDependencies {
+  private parameters: GluegunParameters
+  private print: GluegunPrint
 
-  async function installDependencies({
-    projectName,
-    config,
-  }: IInstallDependencies) {
-    const i = parameters.options.i || parameters.options.install
+  constructor(toolbox: Toolbox) {
+    this.parameters = toolbox.parameters
+    this.print = toolbox.print
+  }
+
+  async installDependencies({ projectName, config }: IInstallDependencies) {
+    const i = this.parameters.options.i || this.parameters.options.install
 
     if (!i) {
       return
@@ -32,11 +37,16 @@ module.exports = (toolbox: Toolbox) => {
 
     const extractDependencies = extractInstallDependencies(config)
 
-    info('Installing dependencies...')
+    this.print.info('Installing dependencies...')
 
     await shell.cd(projectName).exec(`npm install`)
     await shell.cd(projectName).exec(extractDependencies)
   }
 
-  toolbox.installDependencies = installDependencies
+  apply(toolbox: GluegunToolbox) {
+    toolbox.installDependencies = this.installDependencies.bind(this)
+  }
 }
+
+module.exports = (toolbox: GluegunToolbox) =>
+  new InstallDependencies(toolbox).apply(toolbox)

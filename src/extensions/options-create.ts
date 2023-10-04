@@ -1,11 +1,17 @@
-import { Toolbox } from 'gluegun/build/types/domain/toolbox'
+import { GluegunToolbox, GluegunPrompt, GluegunSystem } from 'gluegun'
 import { ISelectOption } from '../controls/customOptions'
 
-module.exports = (toolbox: Toolbox) => {
-  const { prompt, system } = toolbox
+class OptionsCreate {
+  private prompt: GluegunPrompt
+  private system: GluegunSystem
 
-  async function typeProject(): Promise<string> {
-    const projectType = await prompt.ask({
+  constructor(toolbox: GluegunToolbox) {
+    this.prompt = toolbox.prompt
+    this.system = toolbox.system
+  }
+
+  async typeProject(): Promise<string> {
+    const projectType = await this.prompt.ask({
       type: 'select',
       name: 'projectType',
       message: 'Choose project type:',
@@ -19,11 +25,11 @@ module.exports = (toolbox: Toolbox) => {
       throw new Error('Invalid project type selected')
     }
 
-    return await projectType.projectType
+    return projectType.projectType
   }
 
-  async function openVsCode(): Promise<void> {
-    const open = await prompt.confirm(
+  async openVsCode(): Promise<void> {
+    const open = await this.prompt.confirm(
       'Do you want to open the project with Visual Studio Code?',
       false
     )
@@ -32,16 +38,16 @@ module.exports = (toolbox: Toolbox) => {
       return
     }
 
-    await system.exec('code .')
+    await this.system.exec('code .')
   }
 
-  async function selectOption({
+  async selectOption({
     name,
     choices,
     message,
     errorMessage,
   }: ISelectOption): Promise<string> {
-    const select = await prompt.ask({
+    const select = await this.prompt.ask({
       type: 'select',
       choices: [...choices],
       name,
@@ -55,7 +61,12 @@ module.exports = (toolbox: Toolbox) => {
     return select[name]
   }
 
-  toolbox.selectOption = selectOption
-  toolbox.typeProject = typeProject
-  toolbox.openVsCode = openVsCode
+  registerMethods(toolbox: GluegunToolbox): void {
+    toolbox.typeProject = this.typeProject.bind(this)
+    toolbox.openVsCode = this.openVsCode.bind(this)
+    toolbox.selectOption = this.selectOption.bind(this)
+  }
 }
+
+module.exports = (toolbox: GluegunToolbox) =>
+  new OptionsCreate(toolbox).registerMethods(toolbox)
