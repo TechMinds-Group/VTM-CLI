@@ -1,24 +1,33 @@
 import * as AdmZip from 'adm-zip'
-import { Toolbox } from 'gluegun/build/types/domain/toolbox'
+import { GluegunFilesystem } from 'gluegun'
+import { GluegunToolbox } from 'gluegun/build/types/domain/toolbox'
 import * as yaml from 'js-yaml'
 import * as path from 'path'
 import { configAdapter } from '../adapters/configAdapter'
 import { IConfigProject } from '../controls/defaultConfig'
 import renamePackage from '../utils/renamePackage'
 
-module.exports = (toolbox: Toolbox) => {
-  const { filesystem } = toolbox
+class ProjectCreate {
+  private readonly fileSystem: GluegunFilesystem
 
-  async function create(config: IConfigProject): Promise<void> {
+  constructor(toolbox: GluegunToolbox) {
+    this.fileSystem = toolbox.filesystem
+    toolbox.createProject = this.create.bind(this)
+  }
+
+  async create(config: IConfigProject): Promise<void> {
     const { name, ...rest } = config
 
     const zip = new AdmZip(path.join(__dirname, '../templates/basic.zip'))
     zip.extractAllTo(`./${name}`, true)
 
-    filesystem.write(`./${name}/config.yml`, yaml.dump(configAdapter(rest)))
+    this.fileSystem.write(
+      `./${name}/config.yml`,
+      yaml.dump(configAdapter(rest))
+    )
 
     await renamePackage(name as string)
   }
-
-  toolbox.createProject = create
 }
+
+module.exports = (toolbox: GluegunToolbox) => new ProjectCreate(toolbox)

@@ -8,6 +8,10 @@ class OptionsCreate {
   constructor(toolbox: GluegunToolbox) {
     this.prompt = toolbox.prompt
     this.system = toolbox.system
+
+    toolbox.typeProject = this.typeProject.bind(this)
+    toolbox.openVsCode = this.openVsCode.bind(this)
+    toolbox.selectOption = this.selectOption.bind(this)
   }
 
   async typeProject(): Promise<string> {
@@ -60,13 +64,6 @@ class OptionsCreate {
 
     return select[name]
   }
-
-  registerMethods(toolbox: GluegunToolbox): void {
-    toolbox.typeProject = this.typeProject.bind(this)
-    toolbox.openVsCode = this.openVsCode.bind(this)
-    toolbox.selectOption = this.selectOption.bind(this)
-  }
 }
 
-module.exports = (toolbox: GluegunToolbox) =>
-  new OptionsCreate(toolbox).registerMethods(toolbox)
+module.exports = (toolbox: GluegunToolbox) => new OptionsCreate(toolbox)

@@ -1,51 +1,54 @@
 import { IConfigAdapter } from '../adapters/configAdapter'
-import { dependencyInstall } from '../controls/dependencyInstall'
+import { dependenciesConfig } from '../controls/dependenciesConfig'
 import { formatString } from './formatString'
 
+interface IDependencies {
+  prod: string[]
+  dev: string[]
+}
+
 export function extractInstallDependencies(config: IConfigAdapter) {
-  let dependencies: string = 'npm i '
+  let dependencies: IDependencies = {
+    prod: [],
+    dev: [],
+  }
 
   switch (formatString(config.styled.cssFramework)) {
     case `materialui`:
       if (
         // @ts-ignore
-        !dependencyInstall.materialui[formatString(config.styled.cssStyled)]
+        !dependenciesConfig.materialui[formatString(config.styled.cssStyled)]
       ) {
         throw new Error(
           `To use Material Ui, you need to specify a valid cssStyled`
         )
       }
-      dependencies += `${
-        // @ts-ignore
-        dependencyInstall.materialui[formatString(config.styled.cssStyled)]
-      } `
+
       break
 
     default:
       Object.keys(config.styled).forEach((value) => {
-        if (
-          // @ts-ignore
-          !dependencyInstall[config.styled[formatString(value)]] &&
-          formatString(config.styled[formatString(value)]) !== 'none'
-        ) {
-          throw new Error(
-            `The ${value} contains an invalid value, see valid options in the documentation: https://github.com/TechMinds-Group/VTM-CLI`
-          )
-        }
+        // if (
+        //   // @ts-ignore
+        //   !dependenciesConfig[config.styled[value]] &&
+        //   formatString(config.styled[value]) !== 'none'
+        // ) {
+        //   throw new Error(
+        //     `The ${value} contains an invalid value, see valid options in the documentation: https://github.com/TechMinds-Group/VTM-CLI`
+        //   )
+        // }
 
-        if (formatString(config.styled[formatString(value)]) !== 'none') {
+        if (formatString(config.styled[value]) !== 'none') {
           dependencies += `${
             // @ts-ignore
-            dependencyInstall[formatString(config.styled[formatString(value)])]
+            dependenciesConfig[formatString(config.styled[value])]
           } `
         }
       })
       break
   }
 
-  if (dependencies === 'npm i ') {
-    return ''
-  }
+  console.log(dependencies)
 
   return dependencies.trim()
 }

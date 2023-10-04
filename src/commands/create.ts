@@ -12,16 +12,14 @@ class CreateCommand implements GluegunCommand {
   async run(toolbox) {
     const {
       print: { info, success, error },
-      parameters: { first },
+      parameters: { first: projectName },
       createProject,
-      configureProject,
+      overwriteConfig,
       installDependencies,
       typeProject,
       openVsCode,
       selectOption,
     } = toolbox
-
-    const projectName = first
 
     if (!projectName) {
       error('Please provide a project name.')
@@ -39,8 +37,11 @@ class CreateCommand implements GluegunCommand {
     }
 
     await createProject(config)
-    projectTypeString === 'Custom' &&
-      (await configureProject(`./${config.name}/`))
+
+    if (projectTypeString === 'Custom') {
+      await overwriteConfig(`./${config.name}/`)
+    }
+
     await installDependencies({ projectName, config: configAdapter(config) })
     await openVsCode()
 

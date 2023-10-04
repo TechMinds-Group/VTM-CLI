@@ -7,7 +7,6 @@ import {
 } from 'gluegun/build/types/domain/toolbox'
 import * as shell from 'shelljs'
 import { IConfigAdapter } from '../adapters/configAdapter'
-import { extractInstallDependencies } from '../utils/extractInstallDependencies'
 
 interface IInstallDependencies {
   projectName: string
@@ -15,12 +14,13 @@ interface IInstallDependencies {
 }
 
 class InstallDependencies {
-  private parameters: GluegunParameters
-  private print: GluegunPrint
+  private readonly parameters: GluegunParameters
+  private readonly print: GluegunPrint
 
   constructor(toolbox: Toolbox) {
     this.parameters = toolbox.parameters
     this.print = toolbox.print
+    toolbox.installDependencies = this.installDependencies.bind(this)
   }
 
   async installDependencies({ projectName, config }: IInstallDependencies) {
@@ -35,18 +35,10 @@ class InstallDependencies {
       throw new Error(`No package.json found in ${projectName}`)
     }
 
-    const extractDependencies = extractInstallDependencies(config)
-
     this.print.info('Installing dependencies...')
 
     await shell.cd(projectName).exec(`npm install`)
-    await shell.cd(projectName).exec(extractDependencies)
-  }
-
-  apply(toolbox: GluegunToolbox) {
-    toolbox.installDependencies = this.installDependencies.bind(this)
   }
 }
 
-module.exports = (toolbox: GluegunToolbox) =>
-  new InstallDependencies(toolbox).apply(toolbox)
+module.exports = (toolbox: GluegunToolbox) => new InstallDependencies(toolbox)
