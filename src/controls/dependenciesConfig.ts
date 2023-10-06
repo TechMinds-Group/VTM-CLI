@@ -1,6 +1,8 @@
 interface Generic {
   [key: string]: {
-    data: string[]
+    data: {
+      [key: string]: string
+    }
     dev: boolean
   }
 }
@@ -8,7 +10,9 @@ interface Generic {
 interface IDependenciesConfig {
   [key: string]:
     | {
-        data: string[]
+        data: {
+          [key: string]: string
+        }
         dev: boolean
       }
     | Generic
@@ -17,68 +21,71 @@ interface IDependenciesConfig {
 export const dependenciesConfig: IDependenciesConfig = {
   materialui: {
     emotion: {
-      data: [
-        '@mui/material',
-        '@emotion/react',
-        '@emotion/styled',
-        '@mui/icons-material',
-      ],
+      data: {
+        '@mui/material': 'latest',
+        '@emotion/react': 'latest',
+        '@emotion/styled': 'latest',
+        '@mui/icons-material': 'latest',
+      },
       dev: false,
     },
     styledcomponents: {
-      data: [
-        'styled-components@^6.0.0-rc.6',
-        '@types/styled-components@^5.1.26',
-        '@mui/material',
-        '@mui/styled-engine-sc',
-        '@mui/icons-material',
-      ],
+      data: {
+        'styled-components': '^6.0.8',
+        '@types/styled-components': '^5.1.26',
+        '@mui/material': 'latest',
+        '@mui/styled-engine-sc': 'latest',
+        '@mui/icons-material': 'latest',
+      },
       dev: false,
     },
   },
   sass: {
-    data: ['sass', '@types/sass'],
+    data: { sass: '^1.69.0', '@types/sass': '^1.45.0' },
     dev: false,
   },
   styledcomponents: {
-    data: ['styled-components@^6.0.0-rc.6', '@types/styled-components@^5.1.26'],
+    data: {
+      'styled-components': '^6.0.8',
+      '@types/styled-components': '^5.1.26',
+    },
     dev: false,
   },
   chakraui: {
-    data: [
-      '@chakra-ui/react',
-      '@emotion/react',
-      '@emotion/styled',
-      'framer-motion',
-    ],
+    data: {
+      '@chakra-ui/react': '^2.8.1',
+      '@emotion/react': '^11.11.1',
+      '@emotion/styled': '^11.11.0',
+      'framer-motion': '^10.16.4',
+    },
     dev: false,
   },
   zustand: {
-    data: ['zustand', '@types/zustand'],
+    data: { zustand: '^4.4.3' },
     dev: false,
   },
   redux: {
-    data: ['@reduxjs/toolkit', 'react-redux'],
+    data: { '@reduxjs/toolkit': '^1.9.7', 'react-redux': '^8.1.3' },
     dev: false,
   },
   reactquery: {
-    data: ['react-query', '@types/react-query'],
+    data: { 'react-query': '^3.39.3', '@types/react-query': '^1.2.9' },
     dev: false,
   },
   axios: {
-    data: ['axios', '@types/axios'],
+    data: { axios: '^1.5.1', '@types/axios': '^0.14.0' },
     dev: false,
   },
   storybook: {
-    data: [
-      'storybook',
-      '@storybook/react-vite',
-      '@storybook/react',
-      '@storybook/addon-essentials',
-      '@storybook/addon-interactions',
-      '@storybook/addon-links',
-      '@storybook/blocks',
-    ],
+    data: {
+      storybook: '',
+      '@storybook/react-vite': 'latest',
+      '@storybook/react': 'latest',
+      '@storybook/addon-essentials': 'latest',
+      '@storybook/addon-interactions': 'latest',
+      '@storybook/addon-links': 'latest',
+      '@storybook/blocks': 'latest',
+    },
     dev: false,
   },
 }

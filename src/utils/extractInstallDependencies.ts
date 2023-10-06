@@ -3,14 +3,14 @@ import { dependenciesConfig } from '../controls/dependenciesConfig'
 import { formatString } from './formatString'
 
 interface IDependencies {
-  prod: string[]
-  dev: string[]
+  prod: object
+  dev: object
 }
 
 export function extractInstallDependencies(config: IConfigAdapter) {
   let dependencies: IDependencies = {
-    prod: [],
-    dev: [],
+    prod: {},
+    dev: {},
   }
 
   switch (formatString(config.styled.cssFramework)) {
@@ -24,31 +24,28 @@ export function extractInstallDependencies(config: IConfigAdapter) {
         )
       }
 
+      Object.keys(config.styled).forEach((value) => {
+        const { data, dev } =
+          dependenciesConfig.materialui[formatString(config.styled[value])]
+        const typeDep = dev ? 'dev' : 'prod'
+
+        dependencies[typeDep] = { ...dependencies[typeDep], ...(data as any) }
+      })
+
       break
 
     default:
       Object.keys(config.styled).forEach((value) => {
-        // if (
-        //   // @ts-ignore
-        //   !dependenciesConfig[config.styled[value]] &&
-        //   formatString(config.styled[value]) !== 'none'
-        // ) {
-        //   throw new Error(
-        //     `The ${value} contains an invalid value, see valid options in the documentation: https://github.com/TechMinds-Group/VTM-CLI`
-        //   )
-        // }
-
         if (formatString(config.styled[value]) !== 'none') {
-          dependencies += `${
-            // @ts-ignore
+          const { data, dev } =
             dependenciesConfig[formatString(config.styled[value])]
-          } `
+          const typeDep = dev ? 'dev' : 'prod'
+
+          dependencies[typeDep] = { ...dependencies[typeDep], ...(data as any) }
         }
       })
       break
   }
 
-  console.log(dependencies)
-
-  return dependencies.trim()
+  return dependencies
 }

@@ -1,6 +1,7 @@
 import { GluegunFilesystem, GluegunTemplate, GluegunToolbox } from 'gluegun'
 import { extensionsOptions } from '../controls/extensionsOptions'
 import { templateConfig } from '../controls/templateConfig'
+import { extractInstallDependencies } from '../utils/extractInstallDependencies'
 import { formatPasteName } from '../utils/formatPasteName'
 import { formatString } from '../utils/formatString'
 import { getConfigAdapter } from '../utils/getConfigAdapter'
@@ -17,7 +18,7 @@ class OverwriteConfig {
   }
 
   async overwrite(path = './') {
-    const config = getConfigAdapter(path)
+    const config = await getConfigAdapter(path)
     const pathTemplates: string = formatPasteName(config.styled)
 
     for (const iterator of templateConfig) {
@@ -45,13 +46,45 @@ class OverwriteConfig {
       }
     }
 
-    this.addDependencies(path)
+    await this.addDependencies(path)
   }
 
   private async addDependencies(path = './') {
-    const packageJson = this.fileSystem.readAsync(`${path}/package.json`)
+    const pathPackage = `${path}/package.json`
+    const readPackage = await this.fileSystem.readAsync(pathPackage)
 
-    console.log(JSON.parse(await packageJson).dependencies)
+    if (!readPackage) {
+      throw new Error(
+        `O arquivo package.json em ${pathPackage} está vazio ou não existe.`
+      )
+    }
+
+    let serializedPackage
+    try {
+      serializedPackage = JSON.parse(readPackage)
+    } catch (error) {
+      throw new Error(
+        `Falha ao analisar o arquivo package.json em ${pathPackage}: ${error.message}`
+      )
+    }
+
+    const config = await getConfigAdapter(path)
+    const { prod, dev } = extractInstallDependencies(config)
+
+    serializedPackage.dependencies = {
+      ...(serializedPackage.dependencies || {}),
+      ...prod,
+    }
+
+    serializedPackage.devDependencies = {
+      ...(serializedPackage.devDependencies || {}),
+      ...dev,
+    }
+
+    await this.fileSystem.writeAsync(
+      pathPackage,
+      JSON.stringify(serializedPackage, null, 2)
+    )
   }
 }
 

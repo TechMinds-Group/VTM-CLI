@@ -4,7 +4,7 @@ import { IConfigAdapter } from '../adapters/configAdapter'
 import { tratamentConfigs } from './tratamentConfigs'
 import { validateFieldsConfig } from './validateFieldsConfig'
 
-export function getConfigAdapter(path: string): IConfigAdapter {
+export async function getConfigAdapter(path: string): Promise<IConfigAdapter> {
   const configContents = fs.readFileSync(`${path}config.yml`, 'utf-8')
   let config = yaml.load(configContents) as IConfigAdapter
 
@@ -14,5 +14,5 @@ export function getConfigAdapter(path: string): IConfigAdapter {
 
   config = tratamentConfigs(config)
 
-  return config
+  return await config
 }
