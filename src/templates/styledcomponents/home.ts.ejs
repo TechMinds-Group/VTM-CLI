@@ -1,0 +1,41 @@
+import { useState } from "react";
+import reactLogo from "/assets/react.svg";
+import techmindsLogo from "/assets/logo_techminds.svg";
+import viteLogo from "/assets/vite.svg";
+import { AppContainerStyled, AppCardStyled, AppReadTheDocStyled } from "../../styles/App.styled.ts";
+
+export default function Home() {
+  const [count, setCount] = useState<number>(0);
+
+  return (
+    <>
+      <AppContainerStyled>
+        <a href="https://vitejs.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://github.com/TechMinds-Group" target="_blank">
+          <img
+            src={techmindsLogo}
+            className="logo techminds"
+            alt="TechMinds logo"
+          />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </AppContainerStyled>
+      <h1>TechMinds</h1>
+      <h2>Vite + React</h2>
+      {/* using example environment variable in Vite Projects  */}
+      <h3>{import.meta.env.VITE_ENVIRONMENT}</h3>
+      <AppCardStyled>
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+      </AppCardStyled>
+      <AppReadTheDocStyled>
+        Click on the Vite, React or TechMinds logos to learn more
+      </AppReadTheDocStyled>
+    </>
+  );
+}

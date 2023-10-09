@@ -1,5 +1,5 @@
 import { IConfigAdapter } from '../adapters/configAdapter'
-import { dependenciesConfig } from '../controls/dependenciesConfig'
+import { dependenciesConfig } from '../constants/dependenciesConfig'
 import { formatString } from './formatString'
 
 interface IDependencies {

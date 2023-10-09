@@ -1,4 +1,4 @@
-import { IConfigProject } from '../controls/defaultConfig'
+import { IConfigProject } from '../constants/defaultConfig'
 
 interface Generic {
   [key: string]: string

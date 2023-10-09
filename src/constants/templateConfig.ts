@@ -5,12 +5,12 @@ interface ITemplateConfig {
 
 export const templateConfig: ITemplateConfig[] = [
   {
-    name: 'App',
-    path: 'styles/App.css',
+    name: 'app',
+    path: 'styles/app.css',
   },
   {
-    name: 'Index',
-    path: 'styles/Index.css',
+    name: 'index',
+    path: 'styles/index.css',
   },
   {
     name: 'Home',

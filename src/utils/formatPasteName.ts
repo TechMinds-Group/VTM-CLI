@@ -1,4 +1,4 @@
-import { IConfigProject } from '../controls/defaultConfig'
+import { IConfigProject } from '../constants/defaultConfig'
 import { formatString } from './formatString'
 
 export function formatPasteName(configs: Partial<IConfigProject>): string {

@@ -1,8 +1,8 @@
 {
   "name": "vtm-cli",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "vtm CLI",
-  "author": "klowdyacrux",
+  "author": "Victor Souza",
   "types": "build/types/types.d.ts",
   "bin": {
     "vtm": "bin/vtm"

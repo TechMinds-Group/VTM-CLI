@@ -1,5 +1,5 @@
-import { ISelectOption } from '../controls/customOptions'
-import { IConfigProject } from '../controls/defaultConfig'
+import { ISelectOption } from '../constants/customOptions'
+import { IConfigProject } from '../constants/defaultConfig'
 import { processStep } from './stepManager'
 
 interface ICreate {

@@ -1,5 +1,5 @@
 import { GluegunToolbox, GluegunPrompt, GluegunSystem } from 'gluegun'
-import { ISelectOption } from '../controls/customOptions'
+import { ISelectOption } from '../constants/customOptions'
 
 class OptionsCreate {
   private prompt: GluegunPrompt

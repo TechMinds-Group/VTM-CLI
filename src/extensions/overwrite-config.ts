@@ -1,6 +1,6 @@
 import { GluegunFilesystem, GluegunTemplate, GluegunToolbox } from 'gluegun'
-import { extensionsOptions } from '../controls/extensionsOptions'
-import { templateConfig } from '../controls/templateConfig'
+import { extensionsOptions } from '../constants/extensionsOptions'
+import { templateConfig } from '../constants/templateConfig'
 import { extractInstallDependencies } from '../utils/extractInstallDependencies'
 import { formatPasteName } from '../utils/formatPasteName'
 import { formatString } from '../utils/formatString'
@@ -24,6 +24,9 @@ class OverwriteConfig {
     for (const iterator of templateConfig) {
       const templatePath = `./${pathTemplates}/${iterator.name.toLowerCase()}.ts.ejs`
       const targetPath = `${path}src/${iterator.path}`
+
+      console.log(this.fileSystem.exists(templatePath))
+      //if (!this.fileSystem.exists(templatePath)) return
 
       await this.template.generate({
         template: templatePath,

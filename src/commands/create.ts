@@ -1,6 +1,6 @@
 import { GluegunCommand } from 'gluegun'
 import { configCustom } from '../utils/configCustom'
-import { IConfigProject, defaultConfig } from '../controls/defaultConfig'
+import { IConfigProject, defaultConfig } from '../constants/defaultConfig'
 import { configAdapter } from '../adapters/configAdapter'
 import { handleError } from '../middlewares/handleError'
 

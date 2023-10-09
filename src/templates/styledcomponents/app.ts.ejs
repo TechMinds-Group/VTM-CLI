@@ -1,0 +1,58 @@
+import styled, { keyframes } from 'styled-components';
+
+export const AppContainerStyled = styled.div`
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+
+  .logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+
+    &:hover {
+      filter: drop-shadow(0 0 2em #646cffaa);
+    }
+
+    &.techminds:hover {
+      filter: drop-shadow(0 0 2em #63a3fd);
+    }
+
+    &.react:hover {
+      filter: drop-shadow(0 0 2em #61dafbaa);
+    }
+  }
+
+  @keyframes logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    export default Container;
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    a:nth-of-type(3) .logo {
+      animation: ${keyframes`
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      `} infinite 20s linear;
+    }
+  }
+`;
+
+export const AppCardStyled = styled.div`
+  padding: 2em;
+`;
+
+export const AppReadTheDocStyled = styled.p`
+  color: #888;
+`;

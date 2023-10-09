@@ -1,5 +1,5 @@
-import { ISelectOption, customOptions } from '../controls/customOptions'
-import { IConfigProject } from '../controls/defaultConfig'
+import { ISelectOption, customOptions } from '../constants/customOptions'
+import { IConfigProject } from '../constants/defaultConfig'
 
 function filterOptions(step: string, removeOptions: string[]) {
   // @ts-ignore

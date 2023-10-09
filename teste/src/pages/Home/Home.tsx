@@ -2,7 +2,7 @@ import { useState } from "react";
 import reactLogo from "/assets/react.svg";
 import techmindsLogo from "/assets/logo_techminds.svg";
 import viteLogo from "/assets/vite.svg";
-import "../../styles/app.scss";
+import "../../styles/app.css";
 
 export default function Home() {
   const [count, setCount] = useState<number>(0);

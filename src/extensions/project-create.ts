@@ -4,7 +4,7 @@ import { GluegunToolbox } from 'gluegun/build/types/domain/toolbox'
 import * as yaml from 'js-yaml'
 import * as path from 'path'
 import { configAdapter } from '../adapters/configAdapter'
-import { IConfigProject } from '../controls/defaultConfig'
+import { IConfigProject } from '../constants/defaultConfig'
 import renamePackage from '../utils/renamePackage'
 
 class ProjectCreate {
