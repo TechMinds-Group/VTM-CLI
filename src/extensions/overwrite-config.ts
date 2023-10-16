@@ -5,6 +5,7 @@ import { extractInstallDependencies } from '../utils/extractInstallDependencies'
 import { formatPasteName } from '../utils/formatPasteName'
 import { formatString } from '../utils/formatString'
 import { getConfigAdapter } from '../utils/getConfigAdapter'
+import * as pathDirectory from 'path'
 
 class OverwriteConfig {
   private readonly template: GluegunTemplate
@@ -20,16 +21,23 @@ class OverwriteConfig {
   async overwrite(path = './') {
     const config = await getConfigAdapter(path)
     const pathTemplates: string = formatPasteName(config.styled)
+    const absolutePath = pathDirectory.join(
+      __dirname,
+      `../templates/${pathTemplates}`
+    )
+
+    if (!this.fileSystem.exists(absolutePath))
+      throw new Error('Configuration not implemented')
 
     for (const iterator of templateConfig) {
-      const templatePath = `./${pathTemplates}/${iterator.name.toLowerCase()}.ts.ejs`
+      const nameFile = `${iterator.name.toLowerCase()}.ts.ejs`
+      const templatePath = `${pathTemplates}/${nameFile}`
       const targetPath = `${path}src/${iterator.path}`
 
-      console.log(this.fileSystem.exists(templatePath))
-      //if (!this.fileSystem.exists(templatePath)) return
+      if (!this.fileSystem.exists(`${absolutePath}/${nameFile}`)) return
 
       await this.template.generate({
-        template: templatePath,
+        template: `./${templatePath}`,
         target: targetPath,
       })
 
