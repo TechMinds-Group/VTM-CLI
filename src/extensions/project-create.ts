@@ -5,7 +5,7 @@ import * as yaml from 'js-yaml'
 import * as path from 'path'
 import { configAdapter } from '../adapters/configAdapter'
 import { IConfigProject } from '../constants/defaultConfig'
-import renamePackage from '../utils/renamePackage'
+import renamePackage from '../helpers/renamePackage'
 
 class ProjectCreate {
   private readonly fileSystem: GluegunFilesystem

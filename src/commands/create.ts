@@ -1,5 +1,5 @@
-import { GluegunCommand } from 'gluegun'
-import { configCustom } from '../utils/configCustom'
+import { GluegunCommand, GluegunToolbox } from 'gluegun'
+import { configCustom } from '../helpers/configCustom'
 import { IConfigProject, defaultConfig } from '../constants/defaultConfig'
 import { configAdapter } from '../adapters/configAdapter'
 import { handleError } from '../middlewares/handleError'
@@ -9,10 +9,11 @@ class CreateCommand implements GluegunCommand {
   description = 'Create a new Vite project boilerplate'
 
   @handleError
-  async run(toolbox) {
+  async run(toolbox: GluegunToolbox) {
     const {
       print: { info, success, error },
       parameters: { first: projectName },
+      filesystem,
       createProject,
       overwriteConfig,
       installDependencies,
@@ -24,6 +25,10 @@ class CreateCommand implements GluegunCommand {
     if (!projectName) {
       error('Please provide a project name.')
       return
+    }
+
+    if (filesystem.exists(`${process.cwd()}/${projectName}`)) {
+      throw new Error('A folder with that name already exists')
     }
 
     let config: IConfigProject = { ...defaultConfig, name: projectName }
@@ -43,7 +48,7 @@ class CreateCommand implements GluegunCommand {
     }
 
     await installDependencies({ projectName, config: configAdapter(config) })
-    await openVsCode()
+    await openVsCode(projectName)
 
     success('Project created successfully!')
   }

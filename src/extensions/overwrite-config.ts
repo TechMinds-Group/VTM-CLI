@@ -1,10 +1,10 @@
 import { GluegunFilesystem, GluegunTemplate, GluegunToolbox } from 'gluegun'
 import { extensionsOptions } from '../constants/extensionsOptions'
 import { templateConfig } from '../constants/templateConfig'
-import { extractInstallDependencies } from '../utils/extractInstallDependencies'
-import { formatPasteName } from '../utils/formatPasteName'
-import { formatString } from '../utils/formatString'
-import { getConfigAdapter } from '../utils/getConfigAdapter'
+import { extractInstallDependencies } from '../helpers/extractInstallDependencies'
+import { formatPasteName } from '../helpers/formatPasteName'
+import { formatString } from '../helpers/formatString'
+import { getConfigAdapter } from '../helpers/getConfigAdapter'
 import * as pathDirectory from 'path'
 
 class OverwriteConfig {

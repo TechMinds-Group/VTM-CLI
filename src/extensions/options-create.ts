@@ -32,7 +32,7 @@ class OptionsCreate {
     return projectType.projectType
   }
 
-  async openVsCode(): Promise<void> {
+  async openVsCode(projectName: string): Promise<void> {
     const open = await this.prompt.confirm(
       'Do you want to open the project with Visual Studio Code?',
       false
@@ -42,7 +42,7 @@ class OptionsCreate {
       return
     }
 
-    await this.system.exec('code .')
+    await this.system.exec(`code ${process.cwd()}/${projectName}`)
   }
 
   async selectOption({
