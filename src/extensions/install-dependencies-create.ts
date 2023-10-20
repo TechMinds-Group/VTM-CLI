@@ -30,7 +30,7 @@ class InstallDependencies {
       return
     }
 
-    const packageJsonPath = `${projectName}/package.json`
+    const packageJsonPath = `${projectName}/package.json`.replace('//', '/')
     if (!fs.existsSync(packageJsonPath)) {
       throw new Error(`No package.json found in ${projectName}`)
     }

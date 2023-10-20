@@ -1,4 +1,6 @@
 import { GluegunCommand } from 'gluegun'
+import { IConfigAdapter } from '../adapters/configAdapter'
+import { getConfigAdapter } from '../helpers/getConfigAdapter'
 
 const command: GluegunCommand = {
   name: 'config',
@@ -6,19 +8,23 @@ const command: GluegunCommand = {
   run: async (toolbox) => {
     const {
       print,
-      parameters: { first = '.' },
-      configureProject,
+      parameters: { first = './' },
+      createProject,
+      overwriteConfig,
+      installDependencies,
     } = toolbox
 
-    const path = first
+    const configAdapter: IConfigAdapter = await getConfigAdapter(first)
 
-    try {
-      await configureProject(`${path}/`)
-      print.success('Project configured')
-    } catch (error) {
-      print.error(error)
-      process.exit(1)
-    }
+    await createProject({ name: '', ...configAdapter.styled })
+    await overwriteConfig(first)
+
+    await installDependencies({
+      projectName: first,
+      config: configAdapter,
+    })
+
+    print.success('Project configured')
   },
 }
 

@@ -5,6 +5,8 @@ import { tratamentConfigs } from './tratamentConfigs'
 import { validateFieldsConfig } from './validateFieldsConfig'
 
 export async function getConfigAdapter(path: string): Promise<IConfigAdapter> {
+  if (path === '.') path = './'
+
   const configContents = fs.readFileSync(`${path}config.yml`, 'utf-8')
   let config = yaml.load(configContents) as IConfigAdapter
 
