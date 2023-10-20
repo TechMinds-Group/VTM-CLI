@@ -29,6 +29,8 @@ class OverwriteConfig {
     if (!this.fileSystem.exists(absolutePath))
       throw new Error('Configuration not implemented')
 
+    await this.addDependencies(path)
+
     for (const iterator of templateConfig) {
       const nameFile = `${iterator.name.toLowerCase()}.ts.ejs`
       const templatePath = `${pathTemplates}/${nameFile}`
@@ -56,8 +58,6 @@ class OverwriteConfig {
         )
       }
     }
-
-    await this.addDependencies(path)
   }
 
   private async addDependencies(path = './') {
