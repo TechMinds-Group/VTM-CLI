@@ -21,6 +21,8 @@ class ProjectCreate {
 
     if (name.length > 0 && name !== '.') pathWithName += `${name}/`
 
+    pathWithName = pathWithName.replace('//', '/')
+
     const zip = new AdmZip(path.join(__dirname, '../templates/basic.zip'))
     zip.extractAllTo(pathWithName, true)
 

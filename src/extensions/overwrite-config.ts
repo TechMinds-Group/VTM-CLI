@@ -61,7 +61,7 @@ class OverwriteConfig {
   }
 
   private async addDependencies(path = './') {
-    const pathPackage = `${path}/package.json`
+    const pathPackage = `${path}/package.json`.replace('//', '/')
     const readPackage = await this.fileSystem.readAsync(pathPackage)
 
     if (!readPackage) {

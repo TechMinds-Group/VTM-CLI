@@ -16,7 +16,7 @@ const command: GluegunCommand = {
 
     const configAdapter: IConfigAdapter = await getConfigAdapter(first)
 
-    await createProject({ name: '', ...configAdapter.styled })
+    await createProject({ name: first, ...configAdapter.styled })
     await overwriteConfig(first)
 
     await installDependencies({

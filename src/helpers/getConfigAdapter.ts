@@ -7,6 +7,8 @@ import { validateFieldsConfig } from './validateFieldsConfig'
 export async function getConfigAdapter(path: string): Promise<IConfigAdapter> {
   if (path === '.') path = './'
 
+  path = path.replace('//', '/')
+
   const configContents = fs.readFileSync(`${path}config.yml`, 'utf-8')
   let config = yaml.load(configContents) as IConfigAdapter
 
