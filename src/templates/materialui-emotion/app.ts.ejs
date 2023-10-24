@@ -1,0 +1,17 @@
+import { Outlet } from 'react-router-dom'
+import { ThemeProvider, CssBaseline, createTheme } from '@mui/material'
+
+export default function App() {
+  return (
+    <ThemeProvider
+      theme={createTheme({
+        palette: {
+          mode: 'dark',
+        },
+      })}
+    >
+      <CssBaseline />
+      <Outlet />
+    </ThemeProvider>
+  )
+}

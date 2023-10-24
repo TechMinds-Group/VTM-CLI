@@ -1,11 +1,13 @@
 import { GluegunFilesystem, GluegunTemplate, GluegunToolbox } from 'gluegun'
 import { extensionsOptions } from '../constants/extensionsOptions'
-import { templateConfig } from '../constants/templateConfig'
+import { ITemplateConfig, templateOverwrite } from '../constants/templateOverwrite'
 import { extractInstallDependencies } from '../helpers/extractInstallDependencies'
 import { formatPasteName } from '../helpers/formatPasteName'
 import { formatString } from '../helpers/formatString'
 import { getConfigAdapter } from '../helpers/getConfigAdapter'
 import * as pathDirectory from 'path'
+import { templateDelete } from '../constants/templateDelete'
+import { IConfigAdapter } from '../adapters/configAdapter'
 
 class OverwriteConfig {
   private readonly template: GluegunTemplate
@@ -30,33 +32,24 @@ class OverwriteConfig {
       throw new Error('Configuration not implemented')
 
     await this.addDependencies(path)
+    await this.deleteFiles(path, pathTemplates)
 
-    for (const iterator of templateConfig) {
-      const nameFile = `${iterator.name.toLowerCase()}.ts.ejs`
-      const templatePath = `${pathTemplates}/${nameFile}`
+    for (const iterator of templateOverwrite) {
+      const templatePath = `${pathTemplates}/${iterator.name}`
       const targetPath = `${path}src/${iterator.path}`
 
-      if (!this.fileSystem.exists(`${absolutePath}/${nameFile}`)) return
+      if (!this.fileSystem.exists(`${absolutePath}/${iterator.name}`)) continue
+
+      if(iterator.external) {
+        return this.fileSystem.copyAsync(`${absolutePath}/${iterator.name}`, targetPath);
+      }
 
       await this.template.generate({
         template: `./${templatePath}`,
         target: targetPath,
       })
-
-      let extensionArray: string[] = iterator.path.split('.')
-      let extension = extensionArray[extensionArray.length - 1]
-
-      if (extension === 'css') {
-        this.fileSystem.renameAsync(
-          targetPath,
-          `${iterator.name}.${
-            extensionsOptions[formatString(config.styled.cssStyled)]
-          }`,
-          {
-            overwrite: true,
-          }
-        )
-      }
+      
+      await this.overwriteExtension(iterator, config, targetPath);
     }
   }
 
@@ -96,6 +89,38 @@ class OverwriteConfig {
       pathPackage,
       JSON.stringify(serializedPackage, null, 2)
     )
+  }
+
+  private async overwriteExtension(iterator: ITemplateConfig, config: IConfigAdapter, targetPath: string) {
+    const extensionArray: string[] = iterator.path.split('.')
+    const extension = extensionArray[extensionArray.length - 1]
+    const nameFile = iterator.name.split('.')[0]
+
+    if (extension === 'css') {
+      this.fileSystem.renameAsync(
+        targetPath,
+        `${nameFile}.${
+          extensionsOptions[formatString(config.styled.cssStyled)]
+        }`,
+        {
+          overwrite: true,
+        }
+      )
+    }
+  }
+
+  private async deleteFiles(path = './', config) {
+    const files = templateDelete[config]
+
+    for (const iterator of files) {
+      const targetPath = `${path}src/${iterator}`
+
+      if (!this.fileSystem.exists(targetPath)) continue
+
+      await this.fileSystem.removeAsync(targetPath)
+    }
+
+    return true;
   }
 }
 
