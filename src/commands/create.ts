@@ -1,7 +1,6 @@
 import { GluegunCommand, GluegunToolbox } from 'gluegun'
 import { configCustom } from '../helpers/configCustom'
 import { IConfigProject, defaultConfig } from '../constants/defaultConfig'
-import { configAdapter } from '../adapters/configAdapter'
 import { handleError } from '../middlewares/handleError'
 
 class CreateCommand implements GluegunCommand {
@@ -47,7 +46,7 @@ class CreateCommand implements GluegunCommand {
       await overwriteConfig(`./${config.name}/`)
     }
 
-    await installDependencies({ projectName, config: configAdapter(config) })
+    await installDependencies({ projectName })
     await openVsCode(projectName)
 
     success('Project created successfully!')

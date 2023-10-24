@@ -1,10 +1,25 @@
 import styled, { keyframes } from 'styled-components';
 
-export const AppContainerStyled = styled.div`
+export const AppContainer = styled.div`
+  width: 97vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+ padding: 10px;
+`;
+
+export const ContainerLogos = styled.div`
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  flex: 1;
+
+  a:nth-child(4) {
+    display: block;
+  }
 
   .logo {
     height: 6em;
@@ -12,16 +27,21 @@ export const AppContainerStyled = styled.div`
     will-change: filter;
     transition: filter 300ms;
 
-    &:hover {
-      filter: drop-shadow(0 0 2em #646cffaa);
+
+    &.vite:hover {
+      filter: drop-shadow(0 0 2em #ffeb3b);
     }
 
     &.techminds:hover {
-      filter: drop-shadow(0 0 2em #63a3fd);
+      filter: drop-shadow(0 0 2em #673ab7);
     }
 
     &.react:hover {
-      filter: drop-shadow(0 0 2em #61dafbaa);
+      filter: drop-shadow(0 0 2em #03a9f4);
+    }
+
+    &.styledcomponents:hover {
+      filter: drop-shadow(0 0 2em #ec407a);
     }
   }
 

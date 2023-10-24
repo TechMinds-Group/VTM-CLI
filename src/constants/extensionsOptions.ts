@@ -5,5 +5,5 @@ interface IExtensionsOptions {
 export const extensionsOptions: IExtensionsOptions = {
   sass: 'scss',
   styledcomponents: 'styled.ts',
-  emotion: 'ts',
+  emotion: 'styled.ts',
 }

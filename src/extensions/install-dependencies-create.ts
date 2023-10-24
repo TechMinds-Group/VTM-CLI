@@ -23,7 +23,7 @@ class InstallDependencies {
     toolbox.installDependencies = this.installDependencies.bind(this)
   }
 
-  async installDependencies({ projectName, config }: IInstallDependencies) {
+  async installDependencies({ projectName }: IInstallDependencies) {
     const i = this.parameters.options.i || this.parameters.options.install
 
     if (!i) {

@@ -1,31 +1,39 @@
-import { useState } from "react";
-import reactLogo from "/assets/react.svg";
-import techmindsLogo from "/assets/logo_techminds.svg";
-import viteLogo from "/assets/vite.svg";
-import "../../styles/app.scss";
+import { useState } from 'react'
+import reactLogo from '/assets/react.svg'
+import techmindsLogo from '/assets/logo_techminds.svg'
+import viteLogo from '/assets/vite.svg'
+import sassLogo from '/assets/sass.png'
+import '../../styles/app.scss'
 
 export default function Home() {
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number>(0)
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://github.com/TechMinds-Group" target="_blank">
-          <img
-            src={techmindsLogo}
-            className="logo techminds"
-            alt="TechMinds logo"
-          />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="container-logo">
+        <section>
+          <a href="https://vitejs.dev" target="_blank">
+            <img src={viteLogo} className="logo" alt="Vite logo" />
+          </a>
+          <a href="https://github.com/TechMinds-Group" target="_blank">
+            <img
+              src={techmindsLogo}
+              className="logo techminds"
+              alt="TechMinds logo"
+            />
+          </a>
+          <a href="https://react.dev" target="_blank">
+            <img src={reactLogo} className="logo react" alt="React logo" />
+          </a>
+        </section>
+        <section>
+          <a href="https://sass-lang.com" target="_blank">
+            <img src={sassLogo} className="logo sass" alt="Sass logo" />
+          </a>
+        </section>
       </div>
       <h1>TechMinds</h1>
-      <h2>Vite + React</h2>
+      <h2>Vite + React + Sass</h2>
       {/* using example environment variable in Vite Projects  */}
       <h3>{import.meta.env.VITE_ENVIRONMENT}</h3>
       <div className="card">
@@ -37,5 +45,5 @@ export default function Home() {
         Click on the Vite, React or TechMinds logos to learn more
       </p>
     </>
-  );
+  )
 }

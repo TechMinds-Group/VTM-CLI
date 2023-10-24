@@ -25,7 +25,7 @@ async function getNextOptions(
       case 'material ui':
         return {
           ...customOptions[step],
-          choices: filterOptions(step, ['Sass', 'None']),
+          choices: filterOptions(step, ['Sass', 'None', 'Styled Components']),
         }
       case 'chakra ui':
         return {

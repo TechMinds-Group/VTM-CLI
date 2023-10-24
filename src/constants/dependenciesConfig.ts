@@ -29,16 +29,6 @@ export const dependenciesConfig: IDependenciesConfig = {
       },
       dev: false,
     },
-    styledcomponents: {
-      data: {
-        'styled-components': '^6.0.8',
-        '@types/styled-components': '^5.1.26',
-        '@mui/material': 'latest',
-        '@mui/styled-engine-sc': 'latest',
-        '@mui/icons-material': 'latest',
-      },
-      dev: false,
-    },
   },
   sass: {
     data: { sass: '^1.69.0', '@types/sass': '^1.45.0' },

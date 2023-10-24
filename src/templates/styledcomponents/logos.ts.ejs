@@ -1,0 +1,44 @@
+import reactLogo from '/assets/react.svg'
+import techmindsLogo from '/assets/logo_techminds.svg'
+import viteLogo from '/assets/vite.svg'
+import styledcomponents from '/assets/styledcomponents.png'
+import { v4 } from 'uuid'
+
+interface IImages {
+  id: string
+  url: string
+  image: string
+  alt: string
+  className: string
+}
+
+export const logos: IImages[] = [
+  {
+    id: v4(),
+    url: 'https://vitejs.dev',
+    image: viteLogo,
+    alt: 'Vite logo',
+    className: 'vite',
+  },
+  {
+    id: v4(),
+    url: 'https://github.com/TechMinds-Group',
+    image: techmindsLogo,
+    alt: 'TechMinds logo',
+    className: 'techminds',
+  },
+  {
+    id: v4(),
+    url: 'https://react.dev',
+    image: reactLogo,
+    alt: 'React logo',
+    className: 'react',
+  },
+  {
+    id: v4(),
+    url: 'https://styled-components.com',
+    image: styledcomponents,
+    alt: 'Styled Components logo',
+    className: 'styledcomponents',
+  },
+]

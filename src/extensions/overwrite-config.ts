@@ -41,7 +41,8 @@ class OverwriteConfig {
       if (!this.fileSystem.exists(`${absolutePath}/${iterator.name}`)) continue
 
       if(iterator.external) {
-        return this.fileSystem.copyAsync(`${absolutePath}/${iterator.name}`, targetPath);
+        this.fileSystem.copyAsync(`${absolutePath}/${iterator.name}`, targetPath);
+        continue ;
       }
 
       await this.template.generate({
@@ -111,6 +112,8 @@ class OverwriteConfig {
 
   private async deleteFiles(path = './', config) {
     const files = templateDelete[config]
+
+    if(!files) return;
 
     for (const iterator of files) {
       const targetPath = `${path}src/${iterator}`

@@ -6,7 +6,7 @@ export interface ITemplateConfig {
 
 export const templateOverwrite: ITemplateConfig[] = [
   {
-    name: 'appStyled.ts.ejs',
+    name: 'app.styled.ts.ejs',
     path: 'styles/app.css',
   },
   {
@@ -32,6 +32,16 @@ export const templateOverwrite: ITemplateConfig[] = [
   {
     name: 'mui5.png',
     path: '../public/assets/mui5.png',
+    external: true,
+  },
+  {
+    name: 'styledcomponents.png',
+    path: '../public/assets/styledcomponents.png',
+    external: true,
+  },
+  {
+    name: 'sass.png',
+    path: '../public/assets/sass.png',
     external: true,
   },
 ]
