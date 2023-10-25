@@ -1,16 +1,12 @@
 import { ISelectOption } from '../constants/customOptions'
 import { IConfigProject } from '../constants/defaultConfig'
+import { PathSingleton } from './pathSingleton'
 import { processStep } from './stepManager'
 
-interface ICreate {
-  projectName: string
+export async function configCustom(
   selectOption: (object: ISelectOption) => Promise<string>
-}
-
-export async function configCustom({
-  projectName,
-  selectOption,
-}: ICreate): Promise<IConfigProject> {
+): Promise<IConfigProject> {
+  const projectName = PathSingleton.getInstance().getName()
   let customConfig: Partial<IConfigProject> = {
     name: projectName,
   }

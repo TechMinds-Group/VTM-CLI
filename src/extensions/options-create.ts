@@ -1,13 +1,16 @@
 import { GluegunToolbox, GluegunPrompt, GluegunSystem } from 'gluegun'
 import { ISelectOption } from '../constants/customOptions'
+import { PathSingleton } from '../helpers/pathSingleton'
 
 class OptionsCreate {
   private prompt: GluegunPrompt
   private system: GluegunSystem
+  private pathSingleton: PathSingleton
 
-  constructor(toolbox: GluegunToolbox) {
+  constructor(toolbox: GluegunToolbox, pathSingleton: PathSingleton) {
     this.prompt = toolbox.prompt
     this.system = toolbox.system
+    this.pathSingleton = pathSingleton
 
     toolbox.typeProject = this.typeProject.bind(this)
     toolbox.openVsCode = this.openVsCode.bind(this)
@@ -32,7 +35,7 @@ class OptionsCreate {
     return projectType.projectType
   }
 
-  async openVsCode(projectName: string): Promise<void> {
+  async openVsCode(): Promise<void> {
     const open = await this.prompt.confirm(
       'Do you want to open the project with Visual Studio Code?',
       false
@@ -42,7 +45,7 @@ class OptionsCreate {
       return
     }
 
-    await this.system.exec(`code ${process.cwd()}/${projectName}`)
+    await this.system.exec(`code ${this.pathSingleton.getGlobalRoute()}`)
   }
 
   async selectOption({
@@ -66,4 +69,5 @@ class OptionsCreate {
   }
 }
 
-module.exports = (toolbox: GluegunToolbox) => new OptionsCreate(toolbox)
+module.exports = (toolbox: GluegunToolbox) =>
+  new OptionsCreate(toolbox, PathSingleton.getInstance())

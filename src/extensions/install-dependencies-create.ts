@@ -6,24 +6,22 @@ import {
   Toolbox,
 } from 'gluegun/build/types/domain/toolbox'
 import * as shell from 'shelljs'
-import { IConfigAdapter } from '../adapters/configAdapter'
-
-interface IInstallDependencies {
-  projectName: string
-  config: IConfigAdapter
-}
+import { PathSingleton } from '../helpers/pathSingleton'
 
 class InstallDependencies {
   private readonly parameters: GluegunParameters
   private readonly print: GluegunPrint
+  private readonly pathSingleton: PathSingleton
 
-  constructor(toolbox: Toolbox) {
+  constructor(toolbox: Toolbox, pathSingleton: PathSingleton) {
+    this.pathSingleton = pathSingleton
     this.parameters = toolbox.parameters
     this.print = toolbox.print
     toolbox.installDependencies = this.installDependencies.bind(this)
   }
 
-  async installDependencies({ projectName }: IInstallDependencies) {
+  async installDependencies() {
+    const projectName = this.pathSingleton.getName()
     const i = this.parameters.options.i || this.parameters.options.install
 
     if (!i) {
@@ -41,4 +39,5 @@ class InstallDependencies {
   }
 }
 
-module.exports = (toolbox: GluegunToolbox) => new InstallDependencies(toolbox)
+module.exports = (toolbox: GluegunToolbox) =>
+  new InstallDependencies(toolbox, PathSingleton.getInstance())

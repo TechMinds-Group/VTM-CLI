@@ -1,6 +1,7 @@
 import { GluegunCommand } from 'gluegun'
 import { IConfigAdapter } from '../adapters/configAdapter'
 import { getConfigAdapter } from '../helpers/getConfigAdapter'
+import { PathSingleton } from '../helpers/pathSingleton'
 
 const command: GluegunCommand = {
   name: 'config',
@@ -14,15 +15,18 @@ const command: GluegunCommand = {
       installDependencies,
     } = toolbox
 
-    const configAdapter: IConfigAdapter = await getConfigAdapter(first)
+    const pathSingleton = PathSingleton.getInstance()
+    pathSingleton.addData(first)
 
-    await createProject({ name: first, ...configAdapter.styled })
-    await overwriteConfig(first)
+    const configAdapter: IConfigAdapter = await getConfigAdapter()
 
-    await installDependencies({
-      projectName: first,
-      config: configAdapter,
+    await createProject({
+      name: pathSingleton.getName(),
+      ...configAdapter.styled,
     })
+
+    await overwriteConfig()
+    await installDependencies()
 
     print.success('Project configured')
   },

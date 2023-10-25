@@ -1,7 +1,8 @@
 import { GluegunCommand, GluegunToolbox } from 'gluegun'
-import { configCustom } from '../helpers/configCustom'
 import { IConfigProject, defaultConfig } from '../constants/defaultConfig'
+import { configCustom } from '../helpers/configCustom'
 import { handleError } from '../middlewares/handleError'
+import { PathSingleton } from '../helpers/pathSingleton'
 
 class CreateCommand implements GluegunCommand {
   name = 'create'
@@ -26,18 +27,24 @@ class CreateCommand implements GluegunCommand {
       return
     }
 
-    if (filesystem.exists(`${process.cwd()}/${projectName}`)) {
+    const pathSingleton = PathSingleton.getInstance()
+    pathSingleton.addData(projectName)
+
+    if (filesystem.exists(pathSingleton.getGlobalRoute())) {
       throw new Error('A folder with that name already exists')
     }
 
-    let config: IConfigProject = { ...defaultConfig, name: projectName }
+    let config: IConfigProject = {
+      ...defaultConfig,
+      name: pathSingleton.getName(),
+    }
 
-    info(`Creating a new Vite project with name: ${projectName}`)
+    info(`Creating a new Vite project with name: ${pathSingleton.getName()}`)
 
     const projectTypeString = await typeProject()
 
     if (projectTypeString === 'Custom') {
-      config = await configCustom({ projectName, selectOption })
+      config = await configCustom(selectOption)
     }
 
     await createProject(config)
@@ -46,8 +53,8 @@ class CreateCommand implements GluegunCommand {
       await overwriteConfig(`./${config.name}/`)
     }
 
-    await installDependencies({ projectName })
-    await openVsCode(projectName)
+    await installDependencies()
+    await openVsCode()
 
     success('Project created successfully!')
   }

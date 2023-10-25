@@ -1,6 +1,9 @@
 import { GluegunFilesystem, GluegunTemplate, GluegunToolbox } from 'gluegun'
 import { extensionsOptions } from '../constants/extensionsOptions'
-import { ITemplateConfig, templateOverwrite } from '../constants/templateOverwrite'
+import {
+  ITemplateConfig,
+  templateOverwrite,
+} from '../constants/templateOverwrite'
 import { extractInstallDependencies } from '../helpers/extractInstallDependencies'
 import { formatPasteName } from '../helpers/formatPasteName'
 import { formatString } from '../helpers/formatString'
@@ -8,20 +11,24 @@ import { getConfigAdapter } from '../helpers/getConfigAdapter'
 import * as pathDirectory from 'path'
 import { templateDelete } from '../constants/templateDelete'
 import { IConfigAdapter } from '../adapters/configAdapter'
+import { PathSingleton } from '../helpers/pathSingleton'
 
 class OverwriteConfig {
   private readonly template: GluegunTemplate
   private readonly fileSystem: GluegunFilesystem
+  private readonly pathSingleton: PathSingleton
 
-  constructor(toolbox: GluegunToolbox) {
+  constructor(toolbox: GluegunToolbox, pathSingleton: PathSingleton) {
     this.template = toolbox.template
     this.fileSystem = toolbox.filesystem
+    this.pathSingleton = pathSingleton
 
     toolbox.overwriteConfig = this.overwrite.bind(this)
   }
 
-  async overwrite(path = './') {
-    const config = await getConfigAdapter(path)
+  async overwrite() {
+    const path = this.pathSingleton.getGlobalRoute()
+    const config = await getConfigAdapter()
     const pathTemplates: string = formatPasteName(config.styled)
     const absolutePath = pathDirectory.join(
       __dirname,
@@ -31,30 +38,34 @@ class OverwriteConfig {
     if (!this.fileSystem.exists(absolutePath))
       throw new Error('Configuration not implemented')
 
-    await this.addDependencies(path)
-    await this.deleteFiles(path, pathTemplates)
+    await this.addDependencies()
+    await this.deleteFiles(pathTemplates)
 
     for (const iterator of templateOverwrite) {
       const templatePath = `${pathTemplates}/${iterator.name}`
-      const targetPath = `${path}src/${iterator.path}`
+      const targetPath = `${path}/src/${iterator.path}`
 
       if (!this.fileSystem.exists(`${absolutePath}/${iterator.name}`)) continue
 
-      if(iterator.external) {
-        this.fileSystem.copyAsync(`${absolutePath}/${iterator.name}`, targetPath);
-        continue ;
+      if (iterator.external) {
+        this.fileSystem.copyAsync(
+          `${absolutePath}/${iterator.name}`,
+          targetPath
+        )
+        continue
       }
 
       await this.template.generate({
         template: `./${templatePath}`,
         target: targetPath,
       })
-      
-      await this.overwriteExtension(iterator, config, targetPath);
+
+      await this.overwriteExtension(iterator, config, targetPath)
     }
   }
 
-  private async addDependencies(path = './') {
+  private async addDependencies() {
+    const path = this.pathSingleton.getGlobalRoute()
     const pathPackage = `${path}/package.json`.replace('//', '/')
     const readPackage = await this.fileSystem.readAsync(pathPackage)
 
@@ -73,7 +84,7 @@ class OverwriteConfig {
       )
     }
 
-    const config = await getConfigAdapter(path)
+    const config = await getConfigAdapter()
     const { prod, dev } = extractInstallDependencies(config)
 
     serializedPackage.dependencies = {
@@ -92,7 +103,11 @@ class OverwriteConfig {
     )
   }
 
-  private async overwriteExtension(iterator: ITemplateConfig, config: IConfigAdapter, targetPath: string) {
+  private async overwriteExtension(
+    iterator: ITemplateConfig,
+    config: IConfigAdapter,
+    targetPath: string
+  ) {
     const extensionArray: string[] = iterator.path.split('.')
     const extension = extensionArray[extensionArray.length - 1]
     const nameFile = iterator.name.split('.')[0]
@@ -110,10 +125,11 @@ class OverwriteConfig {
     }
   }
 
-  private async deleteFiles(path = './', config) {
+  private async deleteFiles(config) {
     const files = templateDelete[config]
+    const path = this.pathSingleton.getGlobalRoute()
 
-    if(!files) return;
+    if (!files) return
 
     for (const iterator of files) {
       const targetPath = `${path}src/${iterator}`
@@ -123,8 +139,9 @@ class OverwriteConfig {
       await this.fileSystem.removeAsync(targetPath)
     }
 
-    return true;
+    return true
   }
 }
 
-module.exports = (toolbox: GluegunToolbox) => new OverwriteConfig(toolbox)
+module.exports = (toolbox: GluegunToolbox) =>
+  new OverwriteConfig(toolbox, PathSingleton.getInstance())
